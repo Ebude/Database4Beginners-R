@@ -37,8 +37,10 @@ dGenR<- dbGetQuery(conn,query)
 
 ## Dat files
 ```{r}
-tab<-read.delim('3055.dat')
-#head(tab,3)
+tab<-read.delim2('3055.dat')
+temp<-colnames(tab)
+colnames(tab)<-c('num','val','Firstname','Lastname','Email','val1','unit','Date','Datetime','Verify')
+head(tab,3)
 ```
 
 
@@ -62,7 +64,7 @@ dbSendQuery(conn,query)
 ```
 Delete rows in table
 ```{r}
-query<-"DELETE FROM Tab3055 WHERE Jared=='Mary'"
+query<-"DELETE FROM Tab3055 WHERE Firstname=='Mary'"
 dbExecute(conn,query)
 ```
 Change a value in the table
@@ -85,7 +87,7 @@ dbDisconnect(conn)
 
 # Challenge
 
-1. Import "GeneratorRefilling.sqlite" and "3057.dat" and veiw 
+1. Import "GeneratorRefilling.sqlite" and "3057.dat" and change the header of "3057.dat" to ['num','name','surname','date']
 
 2. Create a table in the database for "3057.dat" called Tab3057
 
