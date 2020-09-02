@@ -1,0 +1,61 @@
+---
+title: "Solutions for Dealing with database Challenge"
+author: "Ebude Yolande"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+## 1. Import "GeneratorRefilling.sqlite" and "3057.dat"
+- Import "GeneratorRefilling.sqlite"
+```{r}
+library(RSQLite)
+conn <- dbConnect(SQLite(),'GeneratorRefilling.sqlite')
+dtables<-dbListTables(conn) # list tables in db
+query <- 'SELECT * From RefillingGen2018'
+dGenR<- dbGetQuery(conn,query)
+```
+- Import "3057.dat"
+```{r}
+tab3057<-read.delim('3057.dat')
+head(tab3057,3)
+```
+
+
+## 2. Create a table in the database for "3057.dat" called Tab3057
+```{r}
+dbCreateTable(conn,'Tab3057',tab3057)
+dbtable<-dbListTables(conn)
+dbtable
+```
+
+
+## 3. Delete the "Tab3055" table
+```{r}
+dbRemoveTable(conn,"Tab3055")
+dbtable<-dbListTables(conn)
+dbtable
+```
+
+
+## 4. Add a row to Tab3057 table
+
+```{r}
+query<-"INSERT INTO Tab3057(X1,Penelope,Guiness) VALUES ('7','Denzel','Malta') "
+dbSendQuery(conn,query)
+```
+
+
+## 5. Delete the 3rd row of Tab3057
+```{r}
+query<-"DELETE FROM Tab3057 WHERE X1='7'"
+dbSendQuery(conn,query)
+```
+
+
+## 6. Add column 'Time' to Tab3057
+```{r}
+query<-"ALTER TABLE Tab3057 ADD Time Varchar(25)"
+dbSendQuery(conn,query)
+```
+

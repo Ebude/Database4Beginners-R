@@ -1,0 +1,98 @@
+---
+title: 'Dealing with database'
+author: "Ebude Yolande"
+output:
+  pdf_document: default
+  html_notebook: default
+---
+
+# Introduction
+Nowadays, most companies use database to store information. There are different kind of database but in this workshop we will handle Structured Query Language (SQL) type: SQLite. To start download these datasets
+
+- \href{https://drive.google.com/file/d/151p846LIvDjQD9WG3fRu2w5L2rQFZSK2/view?usp=sharing}{SqLite file}
+
+Install Rstudio \href{https://rstudio.com/products/rstudio/download/}{\textit{(download)}} or update version
+```{r}
+#install.packages("installr")
+#library(installr)
+#updateR()
+```
+
+# Content
+- Import different database types
+- Modify database 
+
+# 1. Import different database types
+
+## SQLite
+Install sqlite in computer \href{https://www.sqlite.org/download.html}{download file}.
+```{r}
+library(RSQLite)
+conn <- dbConnect(SQLite(),'GeneratorRefilling.sqlite')
+dtables<-dbListTables(conn) # list tables in db
+query <- 'SELECT * From RefillingGen2018'
+dGenR<- dbGetQuery(conn,query)
+#tail(dGenR,3)
+```
+
+## Dat files
+```{r}
+tab<-read.delim('3055.dat')
+#head(tab,3)
+```
+
+
+# 2 Modify database
+Create new table
+```{r}
+#query<- 'CREATE TABLE Workshop (id integer PRIMARYKEY, name char(25), time Date)'
+#dbSendQuery(conn, query)
+```
+Create new table of an existing dataframe
+```{r}
+dbCreateTable(conn,'Tab3055',tab)
+dtables<-dbListTables(conn)
+dtables
+```
+
+Add rows in new table
+```{r}
+query<-"INSERT INTO Workshop(id, name, time) VALUES ('1','Penina','12/01/2019')"
+dbSendQuery(conn,query)
+```
+Delete rows in table
+```{r}
+query<-"DELETE FROM Tab3055 WHERE Jared=='Mary'"
+dbExecute(conn,query)
+```
+Change a value in the table
+```{r}
+query<-"UPDATE Workshop SET name='Angela' WHERE id='1'" 
+dbExecute(conn,query)  
+```
+Check values of table
+```{r}
+query<-"SELECT * FROM Workshop"
+dbtab<-dbGetQuery(conn, query)
+#dbtab
+```
+
+close the database
+```{r}
+dbDisconnect(conn)
+```
+
+
+# Challenge
+
+1. Import "GeneratorRefilling.sqlite" and "3057.dat" and veiw 
+
+2. Create a table in the database for "3057.dat" called Tab3057
+
+3. Delete the "Tab3055" table
+
+4. Add a row to Tab3057 table
+
+5. Delete the 3rd row of Tab3057
+
+6. Add column 'Time' to Tab3057
